@@ -2,9 +2,9 @@
 Contributors: vovasik
 Donate link: http://alkoweb.ru
 Tags:  seohide, seo hide, seo, yandex, google, search engines, nofollow links, hidde links
-Requires at least: 1.3.2
-Tested up to: 4.4.1
-Stable tag: 1.3.2
+Requires at least: 1.3.3
+Tested up to: 4.4
+Stable tag: 1.3.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -67,3 +67,7 @@ Fix multi site support
 == 1.3.2 ==
 
 Add support cyrillic domain
+
+== 1.3.3 ==
+
+Add function vp_seo_hide_hide_in_text

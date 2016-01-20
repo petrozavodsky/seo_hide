@@ -3,7 +3,7 @@
 Plugin Name:SeoHide
 Plugin URI: http://alkoweb.ru/seohide-plugin-wodpress/
 Description: Plugin for hiding external links
-Version: 1.3.2
+Version: 1.3.3
 Author: Petrozavodsky Vladimir
 Author URI: http://alkoweb.ru/
 Text Domain: vp-seo-hide
@@ -155,7 +155,6 @@ if (!class_exists('vp_seo_hide')) {
         function search_links($content, $target = false)
         {
             $tmp = preg_replace_callback('/<a (.+?)>/i', array(&$this, 'links_render_cb'), $content);
-
             return $tmp;
         }
 
@@ -217,4 +216,11 @@ if (!class_exists('vp_seo_hide')) {
     }
 
     vp_seo_hide();
+
+    function vp_seo_hide_hide_in_text($text)
+    {
+        global $vp_seo_hide;
+        return $vp_seo_hide->search_links($text);
+    }
+
 }
