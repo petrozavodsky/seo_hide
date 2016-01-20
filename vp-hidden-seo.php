@@ -217,7 +217,7 @@ if (!class_exists('vp_seo_hide')) {
 
     vp_seo_hide();
 
-    function vp_seo_hide_hide_in_text($text)
+    function vp_seo_hide_in_text($text)
     {
         global $vp_seo_hide;
         return $vp_seo_hide->search_links($text);
