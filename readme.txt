@@ -71,3 +71,7 @@ Add support cyrillic domain
 == 1.3.3 ==
 
 Add function vp_seo_hide_hide_in_text
+
+== 1.3.3 ==
+
+Add filter vp_seo_hide_add_priority and hig priority replace
