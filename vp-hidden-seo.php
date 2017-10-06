@@ -3,7 +3,7 @@
 Plugin Name:SeoHide
 Plugin URI: http://alkoweb.ru/seohide-plugin-wodpress/
 Description: Plugin for hiding external links
-Version: 1.3.4
+Version: 1.3.5
 Author: Petrozavodsky Vladimir
 Author URI: http://alkoweb.ru/
 Text Domain: vp-seo-hide
@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
 if (!class_exists('vp_seo_hide')) {
     class vp_seo_hide
     {
-
+        protected $version='1.3.5';
         protected $settings;
         protected $text_domain;
         protected $option_prefix;
@@ -132,7 +132,10 @@ if (!class_exists('vp_seo_hide')) {
         function load_dependencies()
         {
             require_once plugin_dir_path(__FILE__) . 'includes/class-Seohide-Add-Settings-Page.php';
-            require_once plugin_dir_path(__FILE__) . 'includes/idna_convert.class.php';
+            //Include the internationalized domain name converter (requires PHP 5)
+            if ( version_compare( phpversion(), '5.0.0', '>=' ) && ! class_exists( 'idna_convert' ) ) {
+            	require_once plugin_dir_path(__FILE__) . 'includes/idna_convert.class.php';
+            }
             $settings_page = new Seohide_Add_Settings_Page($this->text_domain, $this->option_prefix);
         }
 
@@ -143,7 +146,7 @@ if (!class_exists('vp_seo_hide')) {
 
         public function load_scripts()
         {
-            wp_register_script('sh', $this->settings['url'] . 'js/sh.js', array('jquery'), '1.0', false);
+            wp_register_script('sh', $this->settings['url'] . 'js/sh.js', array('jquery'), $this->version, false);
             if (!is_admin()) {
                 wp_enqueue_script('sh');
             }

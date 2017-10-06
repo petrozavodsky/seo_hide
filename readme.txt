@@ -2,9 +2,9 @@
 Contributors: vovasik
 Donate link: http://alkoweb.ru
 Tags:  seohide, seo hide, seo, yandex, google, search engines, nofollow links, hidde links
-Requires at least: 1.3.3
-Tested up to: 4.4
-Stable tag: 1.3.3
+Requires at least: 1.3.6
+Tested up to: 4.8.2
+Stable tag: 1.3.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -72,6 +72,14 @@ Add support cyrillic domain
 
 Add function vp_seo_hide_hide_in_text
 
-== 1.3.3 ==
+== 1.3.4 ==
 
 Add filter vp_seo_hide_add_priority and hig priority replace
+
+== 1.3.5 ==
+
+Add version to request .js file
+
+== 1.3.6 ==
+
+Fixed include file idna_convert.class.php
