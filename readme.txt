@@ -72,6 +72,10 @@ Add support cyrillic domain
 
 Add function vp_seo_hide_hide_in_text
 
-== 1.3.3 ==
+== 1.3.4 ==
 
 Add filter vp_seo_hide_add_priority and hig priority replace
+
+== 1.3.5 ==
+
+Add version to request .js file
