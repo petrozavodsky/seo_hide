@@ -132,7 +132,10 @@ if (!class_exists('vp_seo_hide')) {
         function load_dependencies()
         {
             require_once plugin_dir_path(__FILE__) . 'includes/class-Seohide-Add-Settings-Page.php';
-            require_once plugin_dir_path(__FILE__) . 'includes/idna_convert.class.php';
+            //Include the internationalized domain name converter (requires PHP 5)
+            if ( version_compare( phpversion(), '5.0.0', '>=' ) && ! class_exists( 'idna_convert' ) ) {
+            	require_once plugin_dir_path(__FILE__) . 'includes/idna_convert.class.php';
+            }
             $settings_page = new Seohide_Add_Settings_Page($this->text_domain, $this->option_prefix);
         }
 
