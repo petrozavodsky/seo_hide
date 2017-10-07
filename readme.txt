@@ -1,5 +1,5 @@
 ﻿=== SeoHide ===
-Contributors: vovasik
+Contributors: vovasik 
 Donate link: http://alkoweb.ru
 Tags:  seohide, seo hide, seo, yandex, google, search engines, nofollow links, hidde links
 Requires at least: 1.3.6
@@ -82,4 +82,4 @@ Add version to request .js file
 
 == 1.3.6 ==
 
-Fixed include file idna_convert.class.php
+Fixed include file idna_convert.class.php (pull request - CHERTS)
