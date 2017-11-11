@@ -3,7 +3,7 @@ Contributors: vovasik
 Donate link: http://alkoweb.ru
 Tags:  seohide, seo hide, seo, yandex, google, search engines, nofollow links, hidde links
 Requires at least: 1.3.6
-Tested up to: 4.8.2
+Tested up to: 4.8.3
 Stable tag: 1.3.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
