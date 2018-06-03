@@ -4,6 +4,7 @@ Plugin Name:SeoHide
 Plugin URI: http://alkoweb.ru/seohide-plugin-wodpress/
 Description: Plugin for hiding external links
 Version: 1.3.6
+Requires PHP: 5.4
 Author: Petrozavodsky Vladimir
 Author URI: http://alkoweb.ru/
 Text Domain: vp-seo-hide
