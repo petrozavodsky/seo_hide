@@ -8,7 +8,7 @@ Stable tag: 1.3.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Плагин для срытия внешних ссылок сайта с помощью seohide.
+Плагин для скрытия внешних ссылок сайта с помощью seohide.
 
 == Description ==
 
