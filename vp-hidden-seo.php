@@ -183,22 +183,38 @@ if (!class_exists('vp_seo_hide')) {
 
         public function links_render_cb($input)
         {
+            preg_match('~data-seohide=[\'|"]?(false|true)[\'|"]?~i', $input[0], $items);
 
-            if (strpos($input[0], $this->site_host) !== false) {
+            if (!empty($items) && isset($items[1]) && 'false' === $items[1]) {
+                return $input[0];
+            }
+
+            if (strpos($input[0], $this->site_host) !== false && 'true' !== $items[1]) {
                 return $input[0];
             } else {
                 preg_match('~\s(?:href)=(?:[\"\'])?(.*?)(?:[\"\'])?(?:[\s\>])~i', $input[0], $matches);
 
-                if (preg_match("/^(#[a-z0-9-]{1,128}|#)/i", $matches[1])) {
-                    return $input[0];
-                }
                 if ($this->cyrillic_detect($matches[1])) {
                     $punycode_url = $this->punycode_encode($matches[1]);
+
+                    if (apply_filters('vp_seo_hide_check_link', false, $punycode_url)) {
+                        return $matches[1];
+                    }
+
                     $input[0] = str_replace($matches[1], $this->method_hash($punycode_url), $input[0]);
+
                 } else {
+
+                    if (apply_filters('vp_seo_hide_check_link', false, $matches[1])) {
+                        return $matches[1];
+                    }
+
                     $input[0] = str_replace($matches[1], $this->method_hash($matches[1]), $input[0]);
                 }
+
                 $input[0] = str_replace('href=', 'href="#" data-sh=', $input[0]);
+
+
                 return apply_filters('vp_seo_hide_pre_show', $input[0]);
             }
         }
