@@ -7,9 +7,9 @@ class Seohide_Metabox
     protected $post_type;
     protected $meta_box_id;
 
-    function __construct($text_domain,$version, $base_path_url)
+    public function __construct($text_domain, $version, $base_path_url)
     {
-        $this->base_path_url= $base_path_url;
+        $this->base_path_url = $base_path_url;
         $this->version = $version;
         $this->text_domain = $text_domain;
         $this->post_type = 'post';
@@ -21,7 +21,8 @@ class Seohide_Metabox
         add_action('admin_enqueue_scripts', array($this, 'add_admin_scripts'), 10);
     }
 
-    function add_admin_scripts(){
+    public function add_admin_scripts()
+    {
         wp_register_script('seo-hide-admin-meta-box-js', $this->base_path_url . 'admin/js/seo-hide-meta-box.js', array('jquery'), $this->version, true);
         wp_enqueue_script('seo-hide-admin-meta-box-js');
 
@@ -29,16 +30,16 @@ class Seohide_Metabox
         wp_enqueue_style('seo-hide-admin-meta-box-css');
     }
 
-    function my_extra_fields()
+    public function my_extra_fields()
     {
         add_meta_box($this->meta_box_id, __('Seo hide settings', $this->text_domain), array($this, 'get_meta_box'), $this->post_type, 'normal', 'high');
     }
 
-    function get_meta_box($post)
+    public function get_meta_box($post)
     {
         $html_name = $this->post_prefix;
         $type_hide = get_post_meta($post->ID, '_seo_hide-type', 1);
-        $type_hide= 'hide_all_links_on_post';
+        $type_hide = 'hide_all_links_on_post';
         ?>
         <div class="block__seo-hide-meta-box">
             <div class="block__seo-hide-meta-box-item radio">
@@ -71,7 +72,7 @@ class Seohide_Metabox
                 </label>
             </div>
             <div class="block__seo-hide-meta-box-item list">
-                <textarea name="<?php echo $html_name; ?>[_seo_hide-type-help-list]"></textarea>
+                <textarea  name="<?php echo $html_name; ?>[_seo_hide-type-help-list]"></textarea>
             </div>
         </div>
 
@@ -80,7 +81,7 @@ class Seohide_Metabox
         <?php
     }
 
-    function update_meta_box($post_id)
+    public function update_meta_box($post_id)
     {
         if (!wp_verify_nonce($_POST[$this->post_prefix . '_nonce'], $this->post_nonce)) {
             return false;

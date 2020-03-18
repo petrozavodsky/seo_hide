@@ -18,16 +18,16 @@ if (!defined('ABSPATH')) {
 if (!class_exists('vp_seo_hide')) {
     class vp_seo_hide
     {
-        protected $version='1.3.5';
+        protected $version = '2.0.0';
         protected $settings;
         protected $text_domain;
         protected $option_prefix;
         protected $site_host;
         protected $priority;
 
-        function __construct()
+        public function __construct()
         {
-            $this->priority = apply_filters('vp_seo_hide_add_priority',10000);
+            $this->priority = apply_filters('vp_seo_hide_add_priority', 10000);
             add_action('plugins_loaded', array($this, 'text_domine'));
             $this->set_site_host();
             $this->set_text_domain('vp-seo-hide');
@@ -39,18 +39,18 @@ if (!class_exists('vp_seo_hide')) {
                 'url' => plugin_dir_url(__FILE__),
             );
             add_action('wp_enqueue_scripts', array(&$this, 'load_scripts'));
-            add_filter('the_content', array(&$this, 'search_links'),$this->priority);
+            add_filter('the_content', array(&$this, 'search_links'), $this->priority);
             add_filter('get_comment_author_link', array($this, 'hide_comment_author_link_target'), $this->priority, 3);
             $this->add_experimental_functions();
         }
 
-        function punycode_encode($str)
+        public function punycode_encode($str)
         {
             $idn = new idna_convert(array('idn_version' => 2008));
             return $idn->encode($str);
         }
 
-        function cyrillic_detect($str)
+        public function cyrillic_detect($str)
         {
             $res = preg_match("/[а-яА-ЯёЁ]/i", $str);
             if ($res) {
@@ -59,7 +59,7 @@ if (!class_exists('vp_seo_hide')) {
             return false;
         }
 
-        function set_site_host()
+        public function set_site_host()
         {
             $host = network_home_url();
             $host = parse_url($host);
@@ -69,7 +69,7 @@ if (!class_exists('vp_seo_hide')) {
         }
 
 
-        function add_experimental_functions()
+        public function add_experimental_functions()
         {
             $comment = get_option('seohide_comment');
             $comment = $this->option_checker($comment);
@@ -83,22 +83,22 @@ if (!class_exists('vp_seo_hide')) {
                 add_filter('get_comment_author_link', array($this, 'hide_comment_author_link'), 10, 1);
             }
 
-
             $external_blank = get_option($this->option_prefix . 'external_blank', false);
             $external_blank = $this->option_checker($external_blank);
+
             if ($external_blank) {
                 add_filter('vp_seo_hide_pre_show', array($this, 'links_render_cb_help_blank'), 10, 1);
             }
 
         }
 
-        function hide_comment_author_link($return)
+        public function hide_comment_author_link($return)
         {
             $return = $this->search_links($return);
             return $return;
         }
 
-        function hide_comment_author_link_target($return, $author, $comment_ID)
+        public function hide_comment_author_link_target($return, $author, $comment_ID)
         {
             $pos = strpos($return, '<a ');
             if (is_int($pos)) {
@@ -107,7 +107,7 @@ if (!class_exists('vp_seo_hide')) {
             return $return;
         }
 
-        function option_checker($opt)
+        public function option_checker($opt)
         {
 
             if ($opt == false || $opt == 0 || $opt == '0' || $opt == '') {
@@ -117,27 +117,29 @@ if (!class_exists('vp_seo_hide')) {
             }
 
             return true;
-
         }
 
-        function set_text_domain($var)
+        public function set_text_domain($var)
         {
             $this->text_domain = $var;
         }
 
-        function set_option_prefix($var)
+        public function set_option_prefix($var)
         {
             $this->option_prefix = strval($var);
         }
 
-        function load_dependencies()
+        public function load_dependencies()
         {
             require_once plugin_dir_path(__FILE__) . 'includes/class-Seohide-Add-Settings-Page.php';
-            //Include the internationalized domain name converter (requires PHP 5)
-            if ( version_compare( phpversion(), '5.0.0', '>=' ) && ! class_exists( 'idna_convert' ) ) {
-            	require_once plugin_dir_path(__FILE__) . 'includes/idna_convert.class.php';
+            require_once plugin_dir_path(__FILE__) . 'includes/class-Seohide-Meta-Box.php';
+
+            if (version_compare(phpversion(), '5.0.0', '>=') && !class_exists('idna_convert')) {
+                require_once plugin_dir_path(__FILE__) . 'includes/idna_convert.class.php';
             }
+
             $settings_page = new Seohide_Add_Settings_Page($this->text_domain, $this->option_prefix);
+            $settings_metabox = new Seohide_Metabox($this->text_domain, $this->version, $this->settings['url']);
         }
 
         function text_domine()
@@ -158,13 +160,13 @@ if (!class_exists('vp_seo_hide')) {
          *
          * @return mixed
          */
-        function search_links($content, $target = false)
+        public function search_links($content, $target = false)
         {
             $tmp = preg_replace_callback('/<a (.+?)>/i', array(&$this, 'links_render_cb'), $content);
             return $tmp;
         }
 
-        function links_render_cb($input)
+        public function links_render_cb($input)
         {
 
             if (strpos($input[0], $this->site_host) !== false) {
@@ -186,7 +188,7 @@ if (!class_exists('vp_seo_hide')) {
             }
         }
 
-        function links_render_cb_help_blank($str)
+        public function links_render_cb_help_blank($str)
         {
             preg_match('~<a.*?target=["\']([^"]+)["\'].?>~s', $str, $matches);
 
@@ -197,13 +199,12 @@ if (!class_exists('vp_seo_hide')) {
             return $str;
         }
 
-
         /**
          * @param $var string
          *
          * @return string
          */
-        function method_hash($var)
+        public function method_hash($var)
         {
             return base64_encode($var);
         }
