@@ -16,23 +16,43 @@ class Seohide_Metabox
         $this->meta_box_id = 'seo_hide_metabox';
         $this->post_prefix = 'seo_hided';
         $this->post_nonce = 'seo_hided_nonce';
-        add_action('add_meta_boxes', array($this, 'my_extra_fields'), 1);
-        add_action('save_post', array($this, 'update_meta_box'), 0);
-        add_action('admin_enqueue_scripts', array($this, 'add_admin_scripts'), 10);
+        add_action('add_meta_boxes', [$this, 'my_extra_fields'], 1);
+        add_action('save_post', [$this, 'update_meta_box'], 0);
+        add_action('admin_enqueue_scripts', [$this, 'add_admin_scripts'], 10);
     }
 
     public function add_admin_scripts()
     {
-        wp_register_script('seo-hide-admin-meta-box-js', $this->base_path_url . 'admin/js/seo-hide-meta-box.js', array('jquery'), $this->version, true);
+        wp_register_script(
+            'seo-hide-admin-meta-box-js',
+            $this->base_path_url . 'admin/js/seo-hide-meta-box.js',
+            ['jquery'],
+            $this->version,
+            true
+        );
+
         wp_enqueue_script('seo-hide-admin-meta-box-js');
 
-        wp_register_style('seo-hide-admin-meta-box-css', $this->base_path_url . 'admin/css/seo-hide-meta-box.css', array(), $this->version);
+        wp_register_style(
+            'seo-hide-admin-meta-box-css',
+            $this->base_path_url . 'admin/css/seo-hide-meta-box.css',
+            [],
+            $this->version
+        );
+
         wp_enqueue_style('seo-hide-admin-meta-box-css');
     }
 
     public function my_extra_fields()
     {
-        add_meta_box($this->meta_box_id, __('Seo hide settings', $this->text_domain), array($this, 'get_meta_box'), $this->post_type, 'normal', 'high');
+        add_meta_box(
+            $this->meta_box_id,
+            __('Seo hide settings', $this->text_domain),
+            [$this, 'get_meta_box'],
+            $this->post_type,
+            'normal',
+            'high'
+        );
     }
 
     public function get_meta_box($post)
@@ -45,29 +65,33 @@ class Seohide_Metabox
             <div class="block__seo-hide-meta-box-item radio">
                 <label>
                     <input type="radio"
-                           name="<?php echo $html_name; ?>[_seo_hide-type]" <?php checked($type_hide, 'hide_all_links_on_post'); ?>
-                           value="all_links_on_post">
+                        name="<?php echo $html_name; ?>[_seo_hide-type]"
+                        <?php checked($type_hide, 'hide_all_links_on_post'); ?>
+                        value="all_links_on_post">
                     <?php _e('Hide all links on post', $this->text_domain); ?>
                 </label>
 
                 <label>
                     <input type="radio"
-                           name="<?php echo $html_name; ?>[_seo_hide-type]" <?php checked($type_hide, 'show_all_links_on_post'); ?>
-                           value="all_links_on_post">
+                        name="<?php echo $html_name; ?>[_seo_hide-type]"
+                        <?php checked($type_hide, 'show_all_links_on_post'); ?>
+                        value="all_links_on_post">
                     <?php _e('Show all links on post', $this->text_domain); ?>
                 </label>
 
                 <label>
                     <input type="radio"
-                           name="<?php echo $html_name; ?>[_seo_hide-type]" <?php checked($type_hide, 'black_list_pattern'); ?>
-                           value="black_list_pattern">
+                        name="<?php echo $html_name; ?>[_seo_hide-type]"
+                        <?php checked($type_hide, 'black_list_pattern'); ?>
+                        value="black_list_pattern">
                     <?php _e('Black list pattern', $this->text_domain); ?>
                 </label>
 
                 <label>
                     <input type="radio"
-                           name="<?php echo $html_name; ?>[_seo_hide-type]" <?php checked($type_hide, 'white_list_pattern'); ?>
-                           value="white_list_pattern">
+                        name="<?php echo $html_name; ?>[_seo_hide-type]"
+                        <?php checked($type_hide, 'white_list_pattern'); ?>
+                        value="white_list_pattern">
                     <?php _e('White list pattern', $this->text_domain); ?>
                 </label>
             </div>

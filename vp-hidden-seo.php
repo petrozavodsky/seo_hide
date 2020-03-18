@@ -28,25 +28,25 @@ if (!class_exists('vp_seo_hide')) {
         public function __construct()
         {
             $this->priority = apply_filters('vp_seo_hide_add_priority', 10000);
-            add_action('plugins_loaded', array($this, 'text_domine'));
+            add_action('plugins_loaded', [$this, 'text_domine']);
             $this->set_site_host();
             $this->set_text_domain('vp-seo-hide');
             $this->set_option_prefix('seohide_');
             $this->load_dependencies();
-            $this->settings = array(
+            $this->settings = [
                 'basename' => plugin_basename(__FILE__),
                 'path' => plugin_dir_path(__FILE__),
                 'url' => plugin_dir_url(__FILE__),
-            );
-            add_action('wp_enqueue_scripts', array(&$this, 'load_scripts'));
-            add_filter('the_content', array(&$this, 'search_links'), $this->priority);
-            add_filter('get_comment_author_link', array($this, 'hide_comment_author_link_target'), $this->priority, 3);
+            ];
+            add_action('wp_enqueue_scripts', [$this, 'load_scripts']);
+            add_filter('the_content', [$this, 'search_links'], $this->priority);
+            add_filter('get_comment_author_link', [$this, 'hide_comment_author_link_target'], $this->priority, 3);
             $this->add_experimental_functions();
         }
 
         public function punycode_encode($str)
         {
-            $idn = new idna_convert(array('idn_version' => 2008));
+            $idn = new idna_convert(['idn_version' => 2008]);
             return $idn->encode($str);
         }
 
@@ -74,20 +74,20 @@ if (!class_exists('vp_seo_hide')) {
             $comment = get_option('seohide_comment');
             $comment = $this->option_checker($comment);
             if ($comment) {
-                add_filter('comment_text', array($this, 'search_links'));
+                add_filter('comment_text', [$this, 'search_links']);
             }
 
             $comment_site_field = get_option($this->option_prefix . 'comment_site_field', false);
             $comment_site_field = $this->option_checker($comment_site_field);
             if ($comment_site_field) {
-                add_filter('get_comment_author_link', array($this, 'hide_comment_author_link'), 10, 1);
+                add_filter('get_comment_author_link', [$this, 'hide_comment_author_link'], 10, 1);
             }
 
             $external_blank = get_option($this->option_prefix . 'external_blank', false);
             $external_blank = $this->option_checker($external_blank);
 
             if ($external_blank) {
-                add_filter('vp_seo_hide_pre_show', array($this, 'links_render_cb_help_blank'), 10, 1);
+                add_filter('vp_seo_hide_pre_show', [$this, 'links_render_cb_help_blank'], 10, 1);
             }
 
         }
@@ -134,8 +134,10 @@ if (!class_exists('vp_seo_hide')) {
             require_once plugin_dir_path(__FILE__) . 'includes/class-Seohide-Add-Settings-Page.php';
             require_once plugin_dir_path(__FILE__) . 'includes/class-Seohide-Meta-Box.php';
 
-            if (version_compare(phpversion(), '5.0.0', '>=') && !class_exists('idna_convert')) {
-                require_once plugin_dir_path(__FILE__) . 'includes/idna_convert.class.php';
+            if (version_compare(phpversion(), '5.0.0', '>=')) {
+                if (!class_exists('idna_convert')) {
+                    require_once plugin_dir_path(__FILE__) . 'includes/idna_convert.class.php';
+                }
             }
 
             $settings_page = new Seohide_Add_Settings_Page($this->text_domain, $this->option_prefix);
@@ -144,12 +146,22 @@ if (!class_exists('vp_seo_hide')) {
 
         function text_domine()
         {
-            load_textdomain($this->text_domain, plugin_dir_path(__FILE__) . 'lang/vp-seo-hide-' . get_locale() . '.mo');
+            load_textdomain(
+                $this->text_domain,
+                plugin_dir_path(__FILE__) . 'lang/vp-seo-hide-' . get_locale() . '.mo'
+            );
         }
 
         public function load_scripts()
         {
-            wp_register_script('sh', $this->settings['url'] . 'js/sh.js', array('jquery'), $this->version, false);
+            wp_register_script(
+                'sh',
+                $this->settings['url'] . 'js/sh.min.js',
+                ['jquery'],
+                $this->version,
+                false
+            );
+
             if (!is_admin()) {
                 wp_enqueue_script('sh');
             }
@@ -162,7 +174,7 @@ if (!class_exists('vp_seo_hide')) {
          */
         public function search_links($content, $target = false)
         {
-            $tmp = preg_replace_callback('/<a (.+?)>/i', array(&$this, 'links_render_cb'), $content);
+            $tmp = preg_replace_callback('/<a (.+?)>/i', [$this, 'links_render_cb'], $content);
             return $tmp;
         }
 

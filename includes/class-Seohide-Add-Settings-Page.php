@@ -14,7 +14,7 @@ class Seohide_Add_Settings_Page
         $this->settings_section = 'seohide_settings';
         $this->settings_page = 'reading';
         $this->option_prefix = strval($option_prefix);
-        add_action('admin_init', array($this, 'register_settings_api_init'));
+        add_action('admin_init', [$this, 'register_settings_api_init']);
 
     }
 
@@ -25,37 +25,52 @@ class Seohide_Add_Settings_Page
         add_settings_section(
             $this->settings_section,
             __('Seohide settings', 'vp-seo-hide'),
-            array($this, 'label_text'),
+            [$this, 'label_text'],
             $this->settings_page
         );
 
         add_settings_field(
             $this->option_prefix . 'comment',
             __('Hide links comment body', 'vp-seo-hide'),
-            array($this, 'comment'),
+            [$this, 'comment'],
             $this->settings_page,
             $this->settings_section
         );
-        register_setting($this->settings_page, $this->option_prefix . 'comment', array($this, 'sanitize_callback'));
+
+        register_setting(
+            $this->settings_page,
+            $this->option_prefix . 'comment',
+            [$this, 'sanitize_callback']
+        );
 
         add_settings_field(
             $this->option_prefix . 'comment_site_field',
             __('Hide link comment author', 'vp-seo-hide'),
-            array($this, 'comment_site_field'),
+            [$this, 'comment_site_field'],
             $this->settings_page,
             $this->settings_section
         );
-        register_setting($this->settings_page, $this->option_prefix . 'comment_site_field', array($this, 'sanitize_callback'));
+
+        register_setting(
+            $this->settings_page,
+            $this->option_prefix . 'comment_site_field',
+            [$this, 'sanitize_callback']
+        );
 
 
         add_settings_field(
             $this->option_prefix . 'external_blank',
             __('Open external links in new window', 'vp-seo-hide'),
-            array($this, 'external_blank'),
+            [$this, 'external_blank'],
             $this->settings_page,
             $this->settings_section
         );
-        register_setting($this->settings_page, $this->option_prefix . 'external_blank', array($this, 'sanitize_callback'));
+
+        register_setting(
+            $this->settings_page,
+            $this->option_prefix . 'external_blank',
+            [$this, 'sanitize_callback']
+        );
 
     }
 
