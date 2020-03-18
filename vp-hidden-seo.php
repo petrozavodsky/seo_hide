@@ -226,7 +226,6 @@ if (!class_exists('vp_seo_hide')) {
 
     }
 
-
     function vp_seo_hide()
     {
         global $vp_seo_hide;

@@ -22,6 +22,7 @@ class Seohide_Add_Settings_Page
     public function register_settings_api_init()
     {
 
+        // section
         add_settings_section(
             $this->settings_section,
             __('Seohide settings', 'vp-seo-hide'),
@@ -29,10 +30,15 @@ class Seohide_Add_Settings_Page
             $this->settings_page
         );
 
+        //field
         add_settings_field(
             $this->option_prefix . 'comment',
             __('Hide links comment body', 'vp-seo-hide'),
-            [$this, 'comment'],
+            function () {
+                echo '<input name="' . $this->option_prefix . 'comment' . '" type="checkbox" '
+                    . checked(1, get_option($this->option_prefix . 'comment'), false) .
+                    ' value="1" class="code" />';
+            },
             $this->settings_page,
             $this->settings_section
         );
@@ -40,13 +46,18 @@ class Seohide_Add_Settings_Page
         register_setting(
             $this->settings_page,
             $this->option_prefix . 'comment',
-            [$this, 'sanitize_callback']
+            ['sanitize_callback' => [$this, 'sanitize_callback_checkbox']]
         );
 
+        //field
         add_settings_field(
             $this->option_prefix . 'comment_site_field',
             __('Hide link comment author', 'vp-seo-hide'),
-            [$this, 'comment_site_field'],
+            function () {
+                echo '<input name="' . $this->option_prefix . 'comment_site_field' . '" type="checkbox"	' .
+                    checked(1, get_option($this->option_prefix . 'comment_site_field'), false) .
+                    '	value="1" class="code" 	/>';
+            },
             $this->settings_page,
             $this->settings_section
         );
@@ -54,14 +65,18 @@ class Seohide_Add_Settings_Page
         register_setting(
             $this->settings_page,
             $this->option_prefix . 'comment_site_field',
-            [$this, 'sanitize_callback']
+            ['sanitize_callback' => [$this, 'sanitize_callback_checkbox']]
         );
 
-
+        //field
         add_settings_field(
             $this->option_prefix . 'external_blank',
             __('Open external links in new window', 'vp-seo-hide'),
-            [$this, 'external_blank'],
+            function () {
+                echo '<input name="' . $this->option_prefix . 'external_blank' . '" type="checkbox" '
+                    . checked(1, get_option($this->option_prefix . 'external_blank'), false) .
+                    ' value="1" class="code" />';
+            },
             $this->settings_page,
             $this->settings_section
         );
@@ -69,7 +84,43 @@ class Seohide_Add_Settings_Page
         register_setting(
             $this->settings_page,
             $this->option_prefix . 'external_blank',
-            [$this, 'sanitize_callback']
+            ['sanitize_callback' => [$this, 'sanitize_callback_checkbox']]
+        );
+
+        //field
+        add_settings_field(
+            $this->option_prefix . 'white_list',
+            __('White list', 'vp-seo-hide'),
+            function () {
+                $value = esc_textarea(get_option($this->option_prefix . 'white_list', ''));
+                echo "<textarea name='{$this->option_prefix}white_list'>{$value}</textarea>";
+            },
+            $this->settings_page,
+            $this->settings_section
+        );
+
+        register_setting(
+            $this->settings_page,
+            $this->option_prefix . 'white_list',
+            ['sanitize_callback' => 'sanitize_textarea_field']
+        );
+
+        //field
+        add_settings_field(
+            $this->option_prefix . 'black_list',
+            __('Black list', 'vp-seo-hide'),
+            function () {
+                $value = esc_textarea(get_option($this->option_prefix . 'black_list', ''));
+                echo "<textarea name='{$this->option_prefix}black_list'>{$value}</textarea>";
+            },
+            $this->settings_page,
+            $this->settings_section
+        );
+
+        register_setting(
+            $this->settings_page,
+            $this->option_prefix . 'black_list',
+            ['sanitize_callback' => 'sanitize_textarea_field']
         );
 
     }
@@ -80,34 +131,12 @@ class Seohide_Add_Settings_Page
         echo __('<p>Settings appear in different parts of the reference site</p>', 'vp-seo-hide');
     }
 
-    public function external_blank()
-    {
-        echo '<input name="' . $this->option_prefix . 'external_blank' . '" type="checkbox" '
-            . checked(1, get_option($this->option_prefix . 'external_blank'), false) .
-            ' value="1" class="code" />';
-    }
-
-    public function comment()
-    {
-        echo '<input name="' . $this->option_prefix . 'comment' . '" type="checkbox" '
-            . checked(1, get_option($this->option_prefix . 'comment'), false) .
-            ' value="1" class="code" />';
-    }
-
-
-    public function comment_site_field()
-    {
-        echo '<input name="' . $this->option_prefix . 'comment_site_field' . '" type="checkbox"
-		' . checked(1, get_option($this->option_prefix . 'comment_site_field'), false) . '
-		value="1" class="code" 	/>';
-    }
-
-    public function sanitize_callback($var)
+    public function sanitize_callback_checkbox($var)
     {
         if ($var == '') {
             $var = 0;
         }
-        return $var;
+        return absint($var);
     }
 
 }
