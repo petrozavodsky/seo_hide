@@ -29,18 +29,22 @@ if (!class_exists('vp_seo_hide')) {
         {
             $this->priority = apply_filters('vp_seo_hide_add_priority', 10000);
             add_action('plugins_loaded', [$this, 'text_domine']);
+
             $this->set_site_host();
             $this->set_text_domain('vp-seo-hide');
             $this->set_option_prefix('seohide_');
             $this->load_dependencies();
+
             $this->settings = [
                 'basename' => plugin_basename(__FILE__),
                 'path' => plugin_dir_path(__FILE__),
                 'url' => plugin_dir_url(__FILE__),
             ];
+
             add_action('wp_enqueue_scripts', [$this, 'load_scripts']);
             add_filter('the_content', [$this, 'search_links'], $this->priority);
             add_filter('get_comment_author_link', [$this, 'hide_comment_author_link_target'], $this->priority, 3);
+
             $this->add_experimental_functions();
         }
 
@@ -156,7 +160,7 @@ if (!class_exists('vp_seo_hide')) {
         {
             wp_register_script(
                 'sh',
-                $this->settings['url'] . 'js/sh.min.js',
+                $this->settings['url'] . 'public/js/sh.min.js',
                 ['jquery'],
                 $this->version,
                 false

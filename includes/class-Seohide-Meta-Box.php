@@ -25,17 +25,17 @@ class Seohide_Metabox
     {
         wp_register_script(
             'seo-hide-admin-meta-box-js',
-            $this->base_path_url . 'admin/js/seo-hide-meta-box.js',
+            $this->base_path_url . 'public/js/seo-hide-meta-box.js',
             ['jquery'],
             $this->version,
             true
         );
 
-        wp_enqueue_script('seo-hide-admin-meta-box-js');
+        wp_enqueue_script('seo-hide-admin-meta-box-css');
 
         wp_register_style(
             'seo-hide-admin-meta-box-css',
-            $this->base_path_url . 'admin/css/seo-hide-meta-box.css',
+            $this->base_path_url . 'seo-hide-meta-boxs',
             [],
             $this->version
         );
