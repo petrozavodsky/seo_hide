@@ -12,4 +12,3 @@ var seo_hide_meta_box;
 $(document).ready(function () {
     seo_hide_meta_box.run();
 });
-
