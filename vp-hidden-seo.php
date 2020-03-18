@@ -41,7 +41,7 @@ if (!class_exists('vp_seo_hide')) {
             $this->load_dependencies();
 
             add_action('wp_enqueue_scripts', [$this, 'load_scripts']);
-            add_filter('the_content', [$this, 'search_links'], $this->priority);
+            add_filter('the_content', [$this, 'search_links_in_content'], $this->priority);
             add_filter('get_comment_author_link', [$this, 'hide_comment_author_link_target'], $this->priority, 3);
 
             $this->add_experimental_functions();
@@ -168,6 +168,11 @@ if (!class_exists('vp_seo_hide')) {
             if (!is_admin()) {
                 wp_enqueue_script('sh');
             }
+        }
+
+        public function search_links_in_content($content)
+        {
+            return preg_replace_callback('/<a (.+?)>/i', [$this, 'links_render_cb'], $content);
         }
 
         /**
