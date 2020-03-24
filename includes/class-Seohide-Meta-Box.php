@@ -62,16 +62,25 @@ class Seohide_Metabox
         $list = get_post_meta($post->ID, '_seo_hide-type-help-list', 1);
 
         if (empty($type_hide)) {
-            $type_hide = 'hide_all_links_on_post';
+            $type_hide = 'default';
         }
+        d($type_hide);
         ?>
         <div class="block__seo-hide-meta-box">
             <div class="block__seo-hide-meta-box-item radio">
                 <label>
                     <input type="radio"
                            name="<?php echo $this->post_prefix; ?>[_seo_hide-type]"
+                        <?php checked($type_hide, 'default'); ?>
+                           value="default">
+                    <?php _e('Default settings', $this->text_domain); ?>
+                </label>
+
+                <label>
+                    <input type="radio"
+                           name="<?php echo $this->post_prefix; ?>[_seo_hide-type]"
                         <?php checked($type_hide, 'hide_all_links_on_post'); ?>
-                           value="all_links_on_post">
+                           value="hide_all_links_on_post">
                     <?php _e('Hide all links on post', $this->text_domain); ?>
                 </label>
 
@@ -79,7 +88,7 @@ class Seohide_Metabox
                     <input type="radio"
                            name="<?php echo $this->post_prefix; ?>[_seo_hide-type]"
                         <?php checked($type_hide, 'show_all_links_on_post'); ?>
-                           value="all_links_on_post">
+                           value="show_all_links_on_post">
                     <?php _e('Show all links on post', $this->text_domain); ?>
                 </label>
 

@@ -24,16 +24,22 @@ if (!class_exists('vp_seo_hide')) {
         protected $option_prefix;
         protected $site_host;
         protected $priority;
+        public $allow_hosts = [];
+        public $disallow_hosts = [];
 
         public function __construct()
         {
+            $this->allow_hosts = $this->options_hosts_extractor(get_option('seohide_white_list', false));
+            $this->disallow_hosts = $this->options_hosts_extractor(get_option('seohide_black_list', false));
+
             $this->settings = [
                 'basename' => plugin_basename(__FILE__),
                 'path' => plugin_dir_path(__FILE__),
                 'url' => plugin_dir_url(__FILE__),
             ];
 
-            $this->priority = apply_filters('vp_seo_hide_add_priority', 10000);
+            $this->priority = apply_filters('vp_seo_hide_add_priority', 40);
+
             add_action('plugins_loaded', [$this, 'text_domine']);
             $this->set_site_host();
             $this->set_text_domain('vp-seo-hide');
@@ -41,10 +47,57 @@ if (!class_exists('vp_seo_hide')) {
             $this->load_dependencies();
 
             add_action('wp_enqueue_scripts', [$this, 'load_scripts']);
+
             add_filter('the_content', [$this, 'search_links_in_content'], $this->priority);
             add_filter('get_comment_author_link', [$this, 'hide_comment_author_link_target'], $this->priority, 3);
 
             $this->add_experimental_functions();
+            add_filter('vp_seo_hide_check_link', [$this, 'exclude_links'], 10, 2);
+
+        }
+
+        private function options_hosts_extractor($array)
+        {
+            if (!empty($array)) {
+
+                $array = explode(PHP_EOL, $array);
+                $array = array_diff($array, ['']);
+                $array = array_map(function ($val) {
+                    $val = trim($val);
+                    return $val;
+                }, $array);
+
+                return $array;
+            }
+
+            return [];
+        }
+
+        public function search_links_in_content($content)
+        {
+            return preg_replace_callback('/<a (.+?)>/i', [$this, 'links_render_cb'], $content);
+        }
+
+        public function exclude_links($val, $url)
+        {
+
+            if (!empty($this->allow_hosts) || !empty($this->disallow_hosts)) {
+
+                if (!empty($this->allow_hosts)) {
+                    if (in_array($url, $this->allow_hosts)) {
+                        return true;
+                    }
+                }
+
+                if (!empty($this->disallow_hosts)) {
+                    if (in_array($url, $this->disallow_hosts)) {
+                        return false;
+                    }
+                }
+
+            }
+
+            return $val;
         }
 
         public function punycode_encode($str)
@@ -144,7 +197,7 @@ if (!class_exists('vp_seo_hide')) {
             }
 
             $settings_page = new Seohide_Add_Settings_Page($this->text_domain, $this->option_prefix);
-            $settings_metabox = new Seohide_Metabox($this->text_domain, $this->version, $this->settings['url']);
+//            $settings_metabox = new Seohide_Metabox($this->text_domain, $this->version, $this->settings['url']);
         }
 
         function text_domine()
@@ -170,11 +223,6 @@ if (!class_exists('vp_seo_hide')) {
             }
         }
 
-        public function search_links_in_content($content)
-        {
-            return preg_replace_callback('/<a (.+?)>/i', [$this, 'links_render_cb'], $content);
-        }
-
         /**
          * @param $content string
          *
@@ -182,8 +230,7 @@ if (!class_exists('vp_seo_hide')) {
          */
         public function search_links($content, $target = false)
         {
-            $tmp = preg_replace_callback('/<a (.+?)>/i', [$this, 'links_render_cb'], $content);
-            return $tmp;
+            return preg_replace_callback('/<a (.+?)>/i', [$this, 'links_render_cb'], $content);
         }
 
         public function links_render_cb($input)
@@ -203,7 +250,7 @@ if (!class_exists('vp_seo_hide')) {
                     $punycode_url = $this->punycode_encode($matches[1]);
 
                     if (apply_filters('vp_seo_hide_check_link', false, $punycode_url)) {
-                        return $matches[1];
+                        return $input[0];
                     }
 
                     $input[0] = str_replace($matches[1], $this->method_hash($punycode_url), $input[0]);
@@ -211,7 +258,7 @@ if (!class_exists('vp_seo_hide')) {
                 } else {
 
                     if (apply_filters('vp_seo_hide_check_link', false, $matches[1])) {
-                        return $matches[1];
+                        return $input[0];
                     }
 
                     $input[0] = str_replace($matches[1], $this->method_hash($matches[1]), $input[0]);
@@ -257,7 +304,7 @@ if (!class_exists('vp_seo_hide')) {
         return $vp_seo_hide;
     }
 
-    vp_seo_hide();
+    add_action('plugins_loaded', 'vp_seo_hide');
 
     function vp_seo_hide_in_text($text)
     {

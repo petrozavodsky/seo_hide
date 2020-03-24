@@ -15,9 +15,7 @@ class Seohide_Add_Settings_Page
         $this->settings_page = 'reading';
         $this->option_prefix = strval($option_prefix);
         add_action('admin_init', [$this, 'register_settings_api_init']);
-
     }
-
 
     public function register_settings_api_init()
     {
@@ -30,6 +28,7 @@ class Seohide_Add_Settings_Page
             $this->settings_page
         );
 
+        /*
         //field
         add_settings_field(
             $this->option_prefix . 'comment',
@@ -49,6 +48,7 @@ class Seohide_Add_Settings_Page
             ['sanitize_callback' => [$this, 'sanitize_callback_checkbox']]
         );
 
+
         //field
         add_settings_field(
             $this->option_prefix . 'comment_site_field',
@@ -67,6 +67,7 @@ class Seohide_Add_Settings_Page
             $this->option_prefix . 'comment_site_field',
             ['sanitize_callback' => [$this, 'sanitize_callback_checkbox']]
         );
+        */
 
         //field
         add_settings_field(
