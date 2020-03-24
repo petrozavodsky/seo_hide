@@ -64,7 +64,7 @@ class Seohide_Metabox
         if (empty($type_hide)) {
             $type_hide = 'default';
         }
-        d($type_hide);
+
         ?>
         <div class="block__seo-hide-meta-box">
             <div class="block__seo-hide-meta-box-item radio">

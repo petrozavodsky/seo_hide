@@ -29,6 +29,8 @@ if (!class_exists('vp_seo_hide')) {
 
         public function __construct()
         {
+
+            $this->site_host = parse_url(site_url('/'), PHP_URL_HOST);
             $this->allow_hosts = $this->options_hosts_extractor(get_option('seohide_white_list', false));
             $this->disallow_hosts = $this->options_hosts_extractor(get_option('seohide_black_list', false));
 
