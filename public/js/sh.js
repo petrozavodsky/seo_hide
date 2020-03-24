@@ -10,8 +10,8 @@ function sh_unhide(data) {
         o1 = bits >> 16 & 0xff;
         o2 = bits >> 8 & 0xff;
         o3 = bits & 0xff;
-        if (h3 == 64)      enc += String.fromCharCode(o1);
-        else if (h4 == 64) enc += String.fromCharCode(o1, o2);
+        if (h3 === 64)      enc += String.fromCharCode(o1);
+        else if (h4 === 64) enc += String.fromCharCode(o1, o2);
         else               enc += String.fromCharCode(o1, o2, o3);
     } while (i < data.length);
     return enc;
@@ -22,7 +22,7 @@ $(document).ready(function () {
     $('[data-sh]').click(function (e) {
         e.preventDefault();
         var attr = $(this).attr('target');
-        if (attr == '_blank') {
+        if (attr === '_blank') {
             window.open(sh_unhide($(this).attr('data-sh')));
         } else {
             document.location.href =  sh_unhide($(this).attr('data-sh'));
