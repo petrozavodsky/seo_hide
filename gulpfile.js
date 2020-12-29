@@ -14,7 +14,7 @@ const pluginSrc = {
   ],
   css: [
     'public/css/*.less',
-    'public/css/vendor/**/*.less',
+    '!public/css/vendor/**/*.less',
   ],
   cssMaps: [
     'public/css/maps/*',
@@ -44,7 +44,9 @@ gulp.task('images', function () {
         max: 80,
         min: 70,
       }),
-      imageminPngquant({ quality: '80' }),
+      imageminPngquant({
+        quality: [0.5, 0.8],
+      }),
       plugins.imagemin.svgo({ plugins: [{ removeViewBox: true }] }),
     ])).
     pipe(gulp.dest(function (file) {
